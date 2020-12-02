@@ -17,7 +17,7 @@ winning_numbers = None
 
 # easy option
 for i in all_nums:
-    for j in all_nums:
+    for j in all_nums[]:
         for k in all_nums:
             i = int(i)
             j = int(j)
