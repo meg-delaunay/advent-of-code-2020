@@ -36,36 +36,34 @@ with open(filename) as input_file:
 
 # print(tree_coords)
 
-# iterate through
-current_pos = (0, 0)
-number_trees = 0
 
+def traverse(x, y, num_rows, num_columns):
+    current_pos = (0, 0)
+    number_trees = 0
 
-while current_pos[0] <= num_rows:
-    # extend puzzle 
-    if current_pos[1] > num_columns:
-        print('extending the puzzle')
-        new_tree_coords = []
-        new_empty_coords = []
-        #duplicate each tree coordinate
-        for c in tree_coords:
-            new_c = (c[0], c[1]+num_columns)
-            new_tree_coords.append(new_c)
-        #duplicate each empty coordiate
-        for c in empty_coords:
-            new_c = (c[0], c[1]+num_columns)
-            new_empty_coords.append(new_c)
-        
-        #add to the main lists so they get looped over
-        empty_coords.extend(new_empty_coords)
-        tree_coords.extend(new_tree_coords)
-        num_columns += num_columns
-    
-    # did we hit a tree?
-    if current_pos in tree_coords:
-        number_trees += 1
+    while current_pos[0] <= num_rows:
+        if current_pos[1] >= num_columns:
+            # back to the beginning
+            current_pos = (current_pos[0], (current_pos[1]%num_columns))
+        # did we hit a tree?
+        if current_pos in tree_coords:
+            number_trees += 1
 
-    # increment the position
-    current_pos = (current_pos[0]+1, current_pos[1]+3)
+        # increment the position
+        current_pos = (current_pos[0]+x, current_pos[1]+y)
+    return number_trees
 
-print('num trees', number_trees)
+print('starting 1,1')
+num_trees_1_1 = traverse(1, 1, num_rows, num_columns)
+print('starting 1,3')
+num_trees_1_3 = traverse(1, 3, num_rows, num_columns)
+print('starting 1,5')
+num_trees_1_5 = traverse(1, 5, num_rows, num_columns)
+print('starting 1,7')
+num_trees_1_7 = traverse(1, 7, num_rows, num_columns)
+print('starting 2,1')
+num_trees_2_1 = traverse(2, 1, num_rows, num_columns)
+
+total = num_trees_1_1 * num_trees_1_3 * num_trees_1_5 * num_trees_1_7 * num_trees_2_1
+
+print('num trees', total)
