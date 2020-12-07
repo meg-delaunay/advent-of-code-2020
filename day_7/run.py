@@ -54,7 +54,7 @@ def count_bags(graph, color):
     if graph[color] == []:
         return 0
 
-    bags=0
+    bags = 0
     for node in graph[color]:
         child_bags = count_bags(graph, node['color'])
         bags += int(node['number']) * child_bags
@@ -68,7 +68,6 @@ for k, v in color_graph.items():
     print('---------------------')
     print('start:', k)
     found_gold = find_gold(color_graph, k)
-    print('found?', found_gold)
     if found_gold:
         total_gold += 1
 
@@ -80,4 +79,4 @@ number_bags = count_bags(color_graph, 'shiny gold')
 
 print('number bags', number_bags)
 
-print(total_gold)
+print('total starting with gold', total_gold)
