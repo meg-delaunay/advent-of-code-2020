@@ -3,6 +3,7 @@ import json
 import os
 import math
 import sys
+import copy
 
 filename = sys.argv[1]
 def read_program(filename):
@@ -79,16 +80,9 @@ accumulator=0
 infinite =True
 program = read_program(filename)
 for i in range(len(program)):
-    # for reasons i do not understand, if i don't read in the program fresh 
-    # each time, it is somehow saving the update to the hit_count and messing this up
-    # but somehow it is NOT saving the update to the actual instruction like what 
-    local_program = read_program(filename)
-    # local_program = program
+    local_program = copy.deepcopy(program)
     print('--------------------------')
     print('changing instruction number: ', i)
-    # if i != 7:
-    #     print(i)
-    #     continue
     local_program[i] = update_instruction(local_program[i])
     accumulator, infinite = run_program(local_program)
     
