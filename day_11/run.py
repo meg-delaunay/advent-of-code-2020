@@ -12,7 +12,7 @@ seat = {
     'occupied': False
 }
 
-all_seats = []
+all_seats = {}
 total_rows = 0
 total_columns = 0
 
@@ -33,13 +33,14 @@ with open(filename) as input_file:
             if col == '.':
                 current_seat['floor'] = True
 
-            all_seats.append(current_seat)
+            key = str(number_row) + '|' + str(number_column)
+            all_seats[key] = current_seat
             number_column+=1
         total_columns = number_column
         number_row+=1
     total_rows = number_row
 
-# print(all_seats)
+print(all_seats)
 
 def set_adjacents(coords, seats):
     row = coords[0]
@@ -61,11 +62,12 @@ def set_adjacents(coords, seats):
             # if it is an edge, it does not exist
             adjacents[k] = None
         else:
-            for s in seats:
-                if s['row'] == v[0] and s['column'] == v[1]:
-                    if s['floor'] == True:
-                        # if it is a floor, it does not matter for here
-                        adjacents[k] = None
+            seat_key = str(v[0]) + '|' + str(v[1])
+            s = seats[seat_key]
+
+            if s['floor'] == True:
+                # if it is a floor, it does not matter for here
+                adjacents[k] = None
 
     return adjacents                
 
@@ -73,22 +75,23 @@ def set_adjacents(coords, seats):
 
 
 
-for seat in all_seats:
-    seat_coordinates = (seat['row'], seat['column'])
-    seat['adjacents'] = set_adjacents(seat_coordinates, all_seats)
+for seat_key, seat_data in all_seats.items():
+    print(seat_key)
+    seat_coordinates = (seat_data['row'], seat_data['column'])
+    seat_data['adjacents'] = set_adjacents(seat_coordinates, all_seats)
 
 print(all_seats)
 
 def determine_occupied(coords, seats):
-    for seat in seats:
-        if seat['row'] == coords[0] and seat['column'] == coords[1]:
-            return seat['occupied']
+    seat_key = str(coords[0]) + '|' + str(coords[1])
+    seat = seats[seat_key]
+    return seat['occupied']
 
 def play_round(seats):
     changes_in_round = 0
     updating_seats = copy.deepcopy(seats)
-    for i in range(len(seats)): 
-        seat = seats[i]
+    # seat_index = 0
+    for seat_key, seat in seats.items(): 
         seat_coordinates = (seat['row'], seat['column'])
 
         count_occupied_adjacents = 0
@@ -105,17 +108,17 @@ def play_round(seats):
         
         if seat['occupied'] == False and count_occupied_adjacents == 0:
             print('flipped seat to occupied')
-            updating_seats[i]['occupied'] = True
+            updating_seats[seat_key]['occupied'] = True
             changes_in_round += 1
         
         elif seat['occupied'] == True and count_occupied_adjacents >= 4:
             print('flipped seat to empty')
-            updating_seats[i]['occupied'] = False
+            updating_seats[seat_key]['occupied'] = False
             changes_in_round += 1
 
         else:
             print('no change?')
-            print(seat)
+            # print(seat)
         
         # print('my seat: ', seat_coordinates)
         # print('number_adjacent', count_occupied_adjacents)
@@ -140,7 +143,7 @@ print('number rounds', number_rounds)
 
 # now we count occupied seats!
 count_final_occupied = 0
-for seat in all_seats:
+for seat_key, seat in all_seats.items():
     if seat['occupied'] == True:
         count_final_occupied += 1
 
