@@ -61,6 +61,7 @@ longest_route = max(available_routes)
 longest_route_index = all_routes.index(longest_route)
 # starting_time = longest_route
 
+## we can start really high because it tells us the answer us going to be high
 divisor, mod = divmod(100000000000000, longest_route)
 starting_time = longest_route * divisor
 found_already = []
@@ -89,7 +90,11 @@ while found_answer != True:
             break
         if mod == 0 and route not in found_already and len(found_already) < 5:
             found_this_turn.append(route)
-            ## basically now that we have found a number that 
+            ## what is this doing? basically once we know that we've found a number that works for multiple
+            ## in the list, now we can always add by the multipier of those
+            ## originally i was adding everything to this list but then i was getting too high of a final answer
+            ## so now i don't let more than 4 numbers get appended to "already found" so that it still does have
+            ## to iterate a bit to find an answer
             longest_route *= route
 
     
